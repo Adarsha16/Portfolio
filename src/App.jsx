@@ -7,17 +7,28 @@ import Education from "./components/Education";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import BootLoader from "./components/BootLoader";
+import CustomCursor from "./components/CustomCursor";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function App() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Check sessionStorage so the bootloader doesn't annoy returning users
+  const [isLoaded, setIsLoaded] = useState(() => {
+    return sessionStorage.getItem("booted") === "true";
+  });
+
+  const handleBootComplete = () => {
+    sessionStorage.setItem("booted", "true");
+    setIsLoaded(true);
+  };
+
   return (
     <div className="bg-void min-h-screen text-text-primary selection:bg-accent selection:text-white font-sans">
 
-      {!isLoaded && <BootLoader onComplete={() => setIsLoaded(true)} />}
+      <CustomCursor />
 
-      {/* 2. Reveal the app only when loaded */}
+      {!isLoaded && <BootLoader onComplete={handleBootComplete} />}
+
       {isLoaded && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -25,12 +36,8 @@ export default function App() {
           transition={{ duration: 1 }}
         >
           <Navbar />
-
           <main>
-            {/* Hero — full width */}
             <Hero />
-
-            {/* All sections — centered in a max-w container with generous spacing */}
             <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 lg:px-12">
               <div className="flex flex-col gap-24 py-16">
                 <About />
@@ -41,7 +48,6 @@ export default function App() {
               </div>
             </div>
           </main>
-
           <Footer />
         </motion.div>
       )}

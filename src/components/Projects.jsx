@@ -274,23 +274,25 @@ export default function Projects() {
       </div>
 
       {/* ─── Archive Toggle ─── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="flex flex-col items-center justify-center pt-8 border-t border-border/30"
-      >
-        <button
-          onClick={() => setShowArchived(!showArchived)}
-          className="group flex items-center gap-3 px-6 py-3 rounded-full bg-surface/40 border border-border/50 text-sm font-mono text-text-secondary hover:text-cyan hover:border-cyan/50 transition-all duration-300"
+      {filteredProjects.length > 4 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center justify-center pt-8 border-t border-border/30"
         >
-          <FiTerminal className="w-4 h-4 text-accent group-hover:text-cyan transition-colors" />
-          {showArchived ? "./close_archive.sh" : "./fetch_archived_nodes.sh"}
-          <motion.div animate={{ rotate: showArchived ? 180 : 0 }}>
-            <FiChevronRight className="w-4 h-4 rotate-90" />
-          </motion.div>
-        </button>
-      </motion.div>
+          <button
+            onClick={() => setShowArchived(!showArchived)}
+            className="group flex items-center gap-3 px-6 py-3 rounded-full bg-surface/40 border border-border/50 text-sm font-mono text-text-secondary hover:text-cyan hover:border-cyan/50 transition-all duration-300"
+          >
+            <FiTerminal className="w-4 h-4 text-accent group-hover:text-cyan transition-colors" />
+            {showArchived ? "./close_archive.sh" : "./fetch_archived_nodes.sh"}
+            <motion.div animate={{ rotate: showArchived ? 180 : 0 }}>
+              <FiChevronRight className="w-4 h-4 rotate-90" />
+            </motion.div>
+          </button>
+        </motion.div>
+      )}
 
       {/* ─── Hidden Archive Grid ─── */}
       <AnimatePresence>

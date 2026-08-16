@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { personalInfo } from "../data/portfolio";
 import {
   FiGithub,
   FiLinkedin,
   FiMail,
-  FiMapPin,
   FiSend,
   FiCopy,
   FiCheck,
+  FiX
 } from "react-icons/fi";
 
 export default function Contact() {
   const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
   const [copied, setCopied] = useState(false);
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+
+  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
 
   const copyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -27,15 +26,41 @@ export default function Contact() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const mailtoLink = `mailto:${personalInfo.email}?subject=Portfolio Inquiry from ${formState.name}&body=${encodeURIComponent(formState.message)}%0A%0AFrom: ${formState.email}`;
-    window.open(mailtoLink);
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    const formData = new FormData();
+    // Fetching the key securely from Vite's env variables
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
+    formData.append("name", formState.name);
+    formData.append("email", formState.email);
+    formData.append("message", formState.message);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormState({ name: "", email: "", message: "" });
+        // Hide the success message after 5 seconds
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
     <section id="contact" ref={ref} className="w-full">
-      {/* Header — centered */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -54,9 +79,7 @@ export default function Contact() {
         </p>
       </motion.div>
 
-      {/* Contact content */}
       <div className="max-w-3xl mx-auto">
-        {/* Quick info row */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -70,7 +93,9 @@ export default function Contact() {
             <FiMail className="w-4 h-4 text-accent flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="text-xs text-text-muted mb-0.5">Email</p>
-              <p className="text-sm text-text-secondary truncate">{personalInfo.email}</p>
+              <p className="text-sm text-text-secondary truncate">
+                {copied ? "Copied to clipboard!" : personalInfo.email}
+              </p>
             </div>
             <div className="flex-shrink-0 text-text-muted group-hover:text-text-primary transition-colors">
               {copied ? <FiCheck className="w-3.5 h-3.5 text-emerald" /> : <FiCopy className="w-3.5 h-3.5" />}
@@ -98,7 +123,6 @@ export default function Contact() {
           </a>
         </motion.div>
 
-        {/* Contact form */}
         <motion.form
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -106,6 +130,35 @@ export default function Contact() {
           onSubmit={handleSubmit}
           className="bg-surface/30 border border-border/40 rounded-2xl p-6 sm:p-8"
         >
+          {/* Status Message Banner */}
+          <AnimatePresence>
+            {submitStatus && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 20 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                className="overflow-hidden"
+              >
+                <div className={`p-4 rounded-xl border flex items-center gap-3 text-sm font-medium ${submitStatus === 'success'
+                    ? 'bg-emerald/10 border-emerald/30 text-emerald'
+                    : 'bg-rose/10 border-rose/30 text-rose'
+                  }`}>
+                  {submitStatus === 'success' ? (
+                    <>
+                      <FiCheck className="w-5 h-5 flex-shrink-0" />
+                      Message sent successfully! I'll get back to you soon.
+                    </>
+                  ) : (
+                    <>
+                      <FiX className="w-5 h-5 flex-shrink-0" />
+                      Oops! Something went wrong. Please try emailing me directly.
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <div className="flex-1">
               <label className="block text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
@@ -151,10 +204,11 @@ export default function Contact() {
 
           <button
             type="submit"
-            className="w-full sm:w-auto px-8 py-3 rounded-xl bg-text-primary hover:bg-white text-void font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto px-8 py-3 rounded-xl bg-text-primary hover:bg-white text-void font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Send Message
-            <FiSend className="w-3.5 h-3.5" />
+            {isSubmitting ? "Sending..." : "Send Message"}
+            {!isSubmitting && <FiSend className="w-3.5 h-3.5" />}
           </button>
         </motion.form>
       </div>
