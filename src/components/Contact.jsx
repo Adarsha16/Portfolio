@@ -50,7 +50,7 @@ export default function Contact() {
         </h2>
         <p className="text-text-secondary max-w-md mx-auto text-base leading-relaxed">
           Currently open to internships, freelance projects, and interesting
-          collaborations. Drop me a line — I'd love to hear from you.
+          collaborations. Drop me a message, I'd love to hear from you.
         </p>
       </motion.div>
 
