@@ -91,7 +91,7 @@ export default function CustomCursor() {
             <div
                 ref={mainCursorRef}
                 className={`absolute top-0 left-0 rounded-full transition-all duration-300 ease-out border-2 ${isHovering
-                        ? "w-12 h-12 -ml-6 -mt-6 bg-accent/20 border-accent backdrop-blur-sm shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+                        ? "w-12 h-12 -ml-6 -mt-6 bg-accent/20 border-accent backdrop-blur-sm shadow-[0_0_20px_rgba(230,92,79,0.5)]"
                         : "w-4 h-4 -ml-2 -mt-2 border-cyan bg-cyan shadow-[0_0_15px_rgba(34,211,238,0.8)]"
                     }`}
             />

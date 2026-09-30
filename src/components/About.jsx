@@ -28,9 +28,9 @@ export default function About() {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="flex flex-col items-center text-center space-y-6 bg-surface/40 border border-border/40 p-8 sm:p-12 rounded-3xl"
       >
-        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-void border-4 border-border/50 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.15)] flex items-center justify-center font-mono text-3xl sm:text-4xl text-accent relative overflow-hidden group">
+        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-void border-4 border-border/50 mb-6 shadow-[0_0_30px_rgba(230,92,79,0.15)] flex items-center justify-center font-mono text-3xl sm:text-4xl text-accent relative overflow-hidden group">
           {/* Subtle glowing radial background */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15)_0%,transparent_70%)] opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(230,92,79,0.15)_0%,transparent_70%)] opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
 
           <span className="relative flex items-center gap-1 mt-2 sm:mt-3">
             {">"}

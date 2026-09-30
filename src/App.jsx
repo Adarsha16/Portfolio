@@ -8,11 +8,11 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import BootLoader from "./components/BootLoader";
 import CustomCursor from "./components/CustomCursor";
+import Scene3D from "./components/Scene3D"; // Import the 3D Scene
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 
 export default function App() {
-  // Check sessionStorage so the bootloader doesn't annoy returning users
   const [isLoaded, setIsLoaded] = useState(() => {
     return sessionStorage.getItem("booted") === "true";
   });
@@ -22,9 +22,11 @@ export default function App() {
     setIsLoaded(true);
   };
 
-  return (
-    <div className="bg-void min-h-screen text-text-primary selection:bg-accent selection:text-white font-sans">
+  const { scrollYProgress } = useScroll();
 
+  return (
+    // Note: removed 'bg-void' here so the 3D canvas shows through
+    <div className="min-h-screen text-text-primary selection:bg-accent selection:text-white font-sans relative">
       <CustomCursor />
 
       {!isLoaded && <BootLoader onComplete={handleBootComplete} />}
@@ -33,8 +35,16 @@ export default function App() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1.5 }}
         >
+          {/* Fixed 3D Background */}
+          <div className="fixed inset-0 -z-20 pointer-events-none">
+            <Scene3D scrollProgress={scrollYProgress} />
+          </div>
+
+          {/* Dark gradient overlay to ensure text is always readable over 3D */}
+          <div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-b from-void/30 via-void/60 to-void/90" />
+
           <Navbar />
           <main>
             <Hero />

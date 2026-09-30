@@ -67,7 +67,7 @@ export const projects = [
       "Multithreaded WLASL corpus scraper with yt-dlp",
     ],
     github: "https://github.com/Pranaya-sht/ASL",
-    color: "#6366f1",
+    color: "#E65C4F",
     category: "AI / Computer Vision",
   },
   {
@@ -83,7 +83,7 @@ export const projects = [
       "Real-time FastAPI inference with base64 image processing",
     ],
     github: "https://github.com/Adarsha16/RoadDamageAutomation",
-    color: "#22d3ee",
+    color: "#4CC9F0",
     category: "AI / Computer Vision",
   },
   {
@@ -99,7 +99,7 @@ export const projects = [
       "Monaco Editor with Redux Toolkit state management",
     ],
     github: "https://github.com/Adarsha16/CodeRoom",
-    color: "#34d399",
+    color: "#84E296",
     category: "Full Stack",
   },
   /*{
@@ -115,7 +115,7 @@ export const projects = [
       "Historical crisis backtesting with frame-by-frame playback",
     ],
     github: "https://github.com/Adarsha16/butterfly_effect/",
-    color: "#f472b6",
+    color: "#B995FF",
     category: "Finance / Math",
   },*/
   {
@@ -131,7 +131,7 @@ export const projects = [
       "Alembic migration management with branch conflict resolution",
     ],
     github: "https://github.com/Adarsha16/intellimark/",
-    color: "#fbbf24",
+    color: "#FFD166",
     category: "Backend / AI",
   },
   {
@@ -147,7 +147,7 @@ export const projects = [
       "Recharts-based admin analytics dashboard",
     ],
     link: "https://spacecleaners.com.au",
-    color: "#8b5cf6",
+    color: "#86b84e",
     category: "Full Stack",
   },
 ];

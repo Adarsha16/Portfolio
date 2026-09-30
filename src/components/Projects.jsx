@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGlitchEffect } from "../hooks/useGlitchEffect";
+import PortalTear from "./PortalTear";
 import { projects, additionalProjects } from "../data/portfolio";
 import {
   FiGithub,
@@ -37,20 +39,23 @@ function ProjectCard({ project }) {
     setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
 
+  const { controls, triggerGlitch } = useGlitchEffect();
+
   return (
-    <div
+    <motion.div
       ref={divRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsFocused(true)}
+      onMouseEnter={() => { setIsFocused(true); triggerGlitch(); }}
       onMouseLeave={() => setIsFocused(false)}
-      className="relative rounded-3xl bg-surface/20 border border-border/30 overflow-hidden transition-colors duration-500 hover:border-border h-full flex flex-col"
+      animate={controls}
+      className="relative rounded-3xl bg-surface/40 backdrop-blur-md border border-border/30 overflow-hidden transition-colors duration-500 hover:border-accent/30 h-full flex flex-col"
     >
       {/* ─── Hover Spotlight Glow ─── */}
       <div
         className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 ease-in-out"
         style={{
           opacity: isFocused ? 1 : 0,
-          background: `radial-gradient(800px circle at ${position.x}px ${position.y}px, rgba(99,102,241,0.06), transparent 40%)`,
+          background: `radial-gradient(800px circle at ${position.x}px ${position.y}px, rgba(230,92,79,0.08), transparent 40%)`,
         }}
       />
 
@@ -140,7 +145,7 @@ function ProjectCard({ project }) {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -242,7 +247,7 @@ export default function Projects() {
               setShowArchived(false); // Clean up UI when switching tabs
             }}
             className={`px-4 py-2 text-xs font-mono rounded-lg border transition-all duration-300 ${activeFilter === cat
-              ? "bg-accent/10 text-accent border-accent/50 shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+              ? "bg-accent/10 text-accent border-accent/50 shadow-[0_0_10px_rgba(230,92,79,0.2)]"
               : "bg-void border-border/40 text-text-muted hover:text-text-primary hover:border-border"
               }`}
           >
@@ -271,6 +276,11 @@ export default function Projects() {
             ))}
           </AnimatePresence>
         </div>
+      </div>
+
+      {/* Hidden Portal Anomaly placed between timeline and archive */}
+      <div className="flex justify-center my-8">
+        <PortalTear />
       </div>
 
       {/* ─── Archive Toggle ─── */}
